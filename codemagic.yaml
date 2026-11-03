@@ -7,7 +7,7 @@ workflows:
       app_store_connect: Apple Dev Key # codemagic verifica
     environment:
       ios_signing:
-        distribution_type: ad_hoc # Usa 'app_store' se sei pronto per TestFlight/App Store
+        distribution_type: app_store # Usa 'app_store' se sei pronto per TestFlight/App Store
         bundle_identifier: com.caregiversenior.app # Il tuo Bundle ID registrato su Apple
       vars:
         XCODE_WORKSPACE: "ios/caregiversenior.xcworkspace"

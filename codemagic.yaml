@@ -1,7 +1,7 @@
 workflows:
   ios-workflow:
     name: iOS App Build
-    max_build_duration: 30
+    max_build_duration: 60
     instance_type: mac_mini_m2
     integrations:
       app_store_connect: codemagic new key
@@ -9,13 +9,21 @@ workflows:
       ios_signing:
         distribution_type: app_store
         bundle_identifier: com.caregiversenior.app
+      vars:
+        XCODE_WORKSPACE: "ios/caregiversenior.xcworkspace"
+        XCODE_SCHEME: "caregiversenior"
     scripts:
       - name: Install dependencies
         script: |
           npm install
-      - name: Build React App
+      - name: Build iOS App
         script: |
-          echo "Build completata con successo"
+          cd ios && pod install
+          xcode-project build-ipa --workspace "$XCODE_WORKSPACE" --scheme "$XCODE_SCHEME"
     artifacts:
-      - "build/ios/ipa/*.ipa"
-      - "*.ipa"
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true

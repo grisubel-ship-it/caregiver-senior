@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkfrontend=self.webpackChunkfrontend||[]).push([[548],{548(e,n,t){t.d(n,{Device:()=>c});const c=(0,t(403).registerPlugin)("Device",{web:()=>t.e(950).then(t.bind(t,569)).then(e=>new e.DeviceWeb)})}}]);
+//# sourceMappingURL=548.3962ac61.chunk.js.map

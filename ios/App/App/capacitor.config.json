@@ -1,0 +1,14 @@
+{
+	"appId": "com.caregiversync.app",
+	"appName": "Caregiver Senior",
+	"webDir": "build",
+	"android": {
+		"allowMixedContent": false,
+		"backgroundColor": "#F8F7F2"
+	},
+	"packageClassList": [
+		"AppPlugin",
+		"DevicePlugin",
+		"PurchasesPlugin"
+	]
+}

@@ -9,17 +9,16 @@ workflows:
       ios_signing:
         distribution_type: app_store
         bundle_identifier: com.caregiversenior.app
-      vars:
-        XCODE_WORKSPACE: "ios/caregiversenior.xcworkspace"
-        XCODE_SCHEME: "caregiversenior"
     scripts:
       - name: Install dependencies
         script: |
           npm install
-      - name: Build iOS App
+      - name: Build iOS App with Expo
         script: |
+          npx expo prebuild --platform ios --clean
           cd ios && pod install
-          xcode-project build-ipa --workspace "$XCODE_WORKSPACE" --scheme "$XCODE_SCHEME"
+          cd ..
+          npx expo run:ios --configuration Release --no-bundler
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log

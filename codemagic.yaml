@@ -16,7 +16,11 @@ workflows:
       - name: Install dependencies
         script: |
           npm install --legacy-peer-deps
-      - name: Build iOS App with ExpoRelease archive -archivePath $HOME/Library/Developer/Xcode/Archives/caregiversenior.xcarchive
+      - name: Build iOS App with Expo
+        script: |
+          npx expo prebuild --platform ios --clean
+          cd ios && pod install && cd ..
+          xcodebuild -workspace "$XCODE_WORKSPACE" -scheme "$XCODE_SCHEME" -sdk iphoneos -configuration Release archive -archivePath /Users/builder/Library/Developer/Xcode/Archives/caregiversenior.xcarchive
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
@@ -24,9 +28,3 @@ workflows:
       app_store_connect:
         auth: integration
         submit_to_testflight: true
-
-        script: |
-          npx expo prebuild --platform ios --clean
-          cd ios && pod install
-          cd ..
-          xcodebuild -workspace "$XCODE_WORKSPACE" -scheme "$XCODE_SCHEME" -sdk iphoneos -configuration 

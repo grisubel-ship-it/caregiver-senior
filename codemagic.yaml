@@ -16,6 +16,7 @@ workflows:
       - name: Install dependencies
         script: |
           npm install --legacy-peer-deps
+          npm install expo -g
       - name: Build iOS App with Expo
         script: |
           npx expo prebuild --platform ios --clean --no-install

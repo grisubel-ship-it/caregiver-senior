@@ -18,7 +18,7 @@ workflows:
           npx expo prebuild --platform ios --clean
           cd ios && pod install
           cd ..
-          npx expo run:ios --configuration Release --no-bundler
+          xcodebuild -workspace ios/caregiversenior.xcworkspace -scheme caregiversenior -sdk iphoneos -configuration Release archive -archivePath $HOME/Library/Developer/Xcode/Archives/caregiversenior.xcarchive
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
@@ -26,3 +26,4 @@ workflows:
       app_store_connect:
         auth: integration
         submit_to_testflight: true
+      

@@ -16,10 +16,10 @@ workflows:
       - name: Install dependencies
         script: |
           npm install --legacy-peer-deps
-          npm install expo -g
+          npm install expo @expo/cli --save-dev
       - name: Build iOS App with Expo
         script: |
-          npx expo prebuild --platform ios --clean --no-install
+          npx expo prebuild --platform ios --clean
           cd ios && pod install && cd ..
           xcodebuild -workspace "$XCODE_WORKSPACE" -scheme "$XCODE_SCHEME" -sdk iphoneos -configuration Release archive -archivePath /Users/builder/Library/Developer/Xcode/Archives/caregiversenior.xcarchive
     artifacts:

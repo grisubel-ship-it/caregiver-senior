@@ -1,0 +1,46 @@
+workflows:
+  ios-app-store:
+    name: Caregiver Senior iOS - App Store
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    integrations:
+      app_store_connect: codemagic new key
+    environment:
+      groups:
+        - caregiver_senior
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.caregiversenior.app
+      vars:
+        XCODE_WORKSPACE: "App.xcworkspace"
+        XCODE_SCHEME: "App"
+        REACT_APP_BACKEND_URL: "https://app-release-config.emergent.host"
+      node: 20
+      xcode: latest
+      cocoapods: default
+    scripts:
+      - name: Installa dipendenze
+        script: yarn install --frozen-lockfile --network-timeout 600000
+      - name: Compila app web
+        script: CI=false yarn build
+      - name: Sincronizza progetto iOS
+        script: npx cap sync ios
+      - name: Installa CocoaPods
+        working_directory: ios/App
+        script: pod install --repo-update
+      - name: Imposta firma
+        script: xcode-project use-profiles
+      - name: Numero build
+        working_directory: ios/App
+        script: |
+          agvtool new-version -all $(date +%y%m%d%H%M)
+      - name: Crea IPA
+        working_directory: ios/App
+        script: xcode-project build-ipa --workspace "$XCODE_WORKSPACE" --scheme "$XCODE_SCHEME"
+    artifacts:
+      - ios/App/build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true

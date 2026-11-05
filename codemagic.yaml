@@ -10,7 +10,7 @@ workflows:
         - caregiver_senior
       ios_signing:
         distribution_type: app_store
-        bundle_identifier: com.caregiversync.app
+        bundle_identifier: com.caregiversenior.app
       vars:
         XCODE_WORKSPACE: "App.xcworkspace"
         XCODE_SCHEME: "App"

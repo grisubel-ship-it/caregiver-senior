@@ -2929,17 +2929,17 @@
     redux-thunk "^3.1.0"
     reselect "^5.1.0"
 
-"@revenuecat/purchases-capacitor@^8":
-  version "8.0.0"
-  resolved "https://registry.yarnpkg.com/@revenuecat/purchases-capacitor/-/purchases-capacitor-8.0.0.tgz#af240c050cc4b8e2f196f3d4c800eeb24c27c6ba"
-  integrity sha512-xoco/tPDzKOSoelQE+72d99Li014nMy4jySRXDz89Ur5Lb/CGr4hvbVDBGDubFy+Emp9nipEufcvLgYt9mTLMA==
+"@revenuecat/purchases-capacitor@9.2.2":
+  version "9.2.2"
+  resolved "https://registry.yarnpkg.com/@revenuecat/purchases-capacitor/-/purchases-capacitor-9.2.2.tgz#23a38cc0478f79a1aa95f30643388b928d438c7b"
+  integrity sha512-FHq22Er19etHc6oLRt69sofjsE+t7I3ByGWLm2PB10k0JpNgubWmnu5chvxn33jxAOoGmGK3FzCRDWQ8923TjQ==
   dependencies:
-    "@revenuecat/purchases-typescript-internal-esm" "11.1.1"
+    "@revenuecat/purchases-typescript-internal-esm" "13.26.0"
 
-"@revenuecat/purchases-typescript-internal-esm@11.1.1":
-  version "11.1.1"
-  resolved "https://registry.yarnpkg.com/@revenuecat/purchases-typescript-internal-esm/-/purchases-typescript-internal-esm-11.1.1.tgz#5d339470df0c650bdcf8f407ab7c2f12cbe3d649"
-  integrity sha512-If0SFXSPBwBlEJ3bx23FY/+qo1GmQDQlMNIxGGYesC/BdBD+fEzb4O8qmtLTAhZI+B5jZBtx8rrIWDQuSJihHg==
+"@revenuecat/purchases-typescript-internal-esm@13.26.0":
+  version "13.26.0"
+  resolved "https://registry.yarnpkg.com/@revenuecat/purchases-typescript-internal-esm/-/purchases-typescript-internal-esm-13.26.0.tgz#f16e95d771d32a5f56dd38fa8628ecd02be7fab8"
+  integrity sha512-+oU1JmHUtSVRyqnQIMWbHIKhXh3DGiXr4SlH8NmIWi8HE2bcnuZcrmfXTUWl91FEkPqRlYy8sqvqv3JcdH6XtA==
 
 "@rollup/plugin-babel@^5.2.0":
   version "5.3.1"

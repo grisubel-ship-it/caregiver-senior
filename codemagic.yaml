@@ -1,29 +1,45 @@
 workflows:
-  ios-workflow:
-    name: iOS App Build
+  ios-app-store:
+    name: Caregiver Senior iOS - App Store
     max_build_duration: 60
     instance_type: mac_mini_m2
     integrations:
-      app_store_connect: codemagic new key
+      app_store_connect: Caregiver Senior ASC
     environment:
+      groups:
+        - caregiver_senior
       ios_signing:
         distribution_type: app_store
-        bundle_identifier: com.caregiversenior.app
+        bundle_identifier: com.caregiversync.app
       vars:
-        XCODE_WORKSPACE: "ios/caregiversenior.xcworkspace"
-        XCODE_SCHEME: "caregiversenior"
+        XCODE_WORKSPACE: "App.xcworkspace"
+        XCODE_SCHEME: "App"
+        REACT_APP_BACKEND_URL: "https://app-release-config.emergent.host"
+      node: 20
+      xcode: latest
+      cocoapods: default
     scripts:
-      - name: Install dependencies
+      - name: Installa dipendenze
+        script: yarn install --frozen-lockfile --network-timeout 600000
+      - name: Compila app web
+        script: CI=false yarn build
+      - name: Sincronizza progetto iOS
+        script: npx cap sync ios
+      - name: Installa CocoaPods
+        working_directory: ios/App
+        script: pod install --repo-update
+      - name: Imposta firma
+        script: xcode-project use-profiles
+      - name: Numero build
+        working_directory: ios/App
         script: |
-          npm install --legacy-peer-deps
-          npm install expo @expo/cli --save-dev
-      - name: Build iOS App with Expo
-        script: |
-          npx expo prebuild --platform ios --clean
-          cd ios && pod install && cd ..
-          xcodebuild -workspace "$XCODE_WORKSPACE" -scheme "$XCODE_SCHEME" -sdk iphoneos -configuration Release archive -archivePath /Users/builder/Library/Developer/Xcode/Archives/caregiversenior.xcarchive
+          LATEST=$(app-store-connect get-latest-app-store-build-number "$APP_STORE_APPLE_ID" 2>/dev/null || echo 10)
+          agvtool new-version -all $((LATEST + 1))
+      - name: Crea IPA
+        working_directory: ios/App
+        script: xcode-project build-ipa --workspace "$XCODE_WORKSPACE" --scheme "$XCODE_SCHEME"
     artifacts:
-      - build/ios/ipa/*.ipa
+      - ios/App/build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
     publishing:
       app_store_connect:

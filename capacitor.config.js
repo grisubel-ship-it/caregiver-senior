@@ -9,6 +9,14 @@ const config = {
   android: {
     allowMixedContent: false,
     backgroundColor: '#F8F7F2',
+    includePlugins: [
+      '@capacitor/app',
+      '@capacitor/device',
+      '@capacitor/filesystem',
+      '@capacitor/local-notifications',
+      '@capacitor/share',
+      '@revenuecat/purchases-capacitor',
+    ],
   },
 };
 

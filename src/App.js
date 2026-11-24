@@ -59,6 +59,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { AppInfoCard } from "@/components/AppInfoCard";
 import {
   Dialog,
   DialogContent,
@@ -1471,6 +1472,8 @@ function SettingsPage() {
           </p>
         </CardContent>
       </Card>
+
+      <AppInfoCard />
 
       <div className="flex gap-4 text-sm">
         <Link to="/privacy" className="text-teal-700 underline" data-testid="settings-privacy-link">Privacy</Link>

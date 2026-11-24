@@ -39,11 +39,19 @@ import {
   CartesianGrid,
   Legend,
 } from "recharts";
-import { getAppUserId } from "@/lib/subscription";
+import { getAppUserId, isNative } from "@/lib/subscription";
 import ProPage from "@/pages/ProPage";
 import AdminPage from "@/pages/AdminPage";
 import { AccessProvider, AccessGate, TrialBanner, DeepLinkHandler } from "@/components/AccessGate";
 import CodeLandingPage from "@/pages/CodeLandingPage";
+import DownloadPage from "@/pages/DownloadPage";
+import { PrivacyPage, SupportPage } from "@/pages/LegalPages";
+import { DocumentsSection } from "@/components/DocumentsSection";
+import { DocumentSearch } from "@/components/DocumentSearch";
+import { ExpiringDocsCard } from "@/components/ExpiringDocsCard";
+import { RemindersSection } from "@/components/RemindersSection";
+import { DoctorSummaryCard } from "@/components/DoctorSummaryCard";
+import { syncReminders, initReminderActions } from "@/lib/reminders";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -381,6 +389,8 @@ function PatientsList() {
         </div>
       )}
 
+      {!loading && patients.length > 0 && <ExpiringDocsCard />}
+
       {/* Search + CTA */}
       <div className="flex items-center gap-2">
         <div className="relative flex-1">
@@ -498,6 +508,8 @@ function PatientsList() {
           </Card>
         ))}
       </div>
+
+      {!loading && patients.length > 0 && <DocumentSearch />}
     </div>
   );
 }
@@ -903,6 +915,10 @@ function PatientDetail() {
           </div>
         </CardContent>
       </Card>
+
+      <DoctorSummaryCard patient={patient} />
+      <RemindersSection patientId={id} />
+      <DocumentsSection patientId={id} />
 
       {/* Handover history + trend */}
       {(handovers.length > 0 || trendLabels.length > 0) && (
@@ -1455,12 +1471,37 @@ function SettingsPage() {
           </p>
         </CardContent>
       </Card>
+
+      <div className="flex gap-4 text-sm">
+        <Link to="/privacy" className="text-teal-700 underline" data-testid="settings-privacy-link">Privacy</Link>
+        <Link to="/supporto" className="text-teal-700 underline" data-testid="settings-support-link">Supporto</Link>
+      </div>
     </div>
   );
 }
 
 // ---------- App ----------
 function App() {
+  // Riprogramma i promemoria farmaci all'avvio e quando l'app torna in primo piano
+  useEffect(() => {
+    if (!isNative()) return;
+    let actionSub;
+    initReminderActions((ok, already) => {
+      if (!ok) toast.error("Non sono riuscito a segnare il farmaco: aggiungilo dal diario");
+      else toast.success(already ? "Questa dose era già stata segnata" : "Farmaco segnato nel diario");
+    })
+      .then((h) => (actionSub = h))
+      .catch(() => {});
+    syncReminders().catch(() => {});
+    let sub;
+    import("@capacitor/app").then(({ App: CapApp }) =>
+      CapApp.addListener("resume", () => syncReminders().catch(() => {})).then((h) => (sub = h))
+    );
+    return () => {
+      sub?.remove();
+      actionSub?.remove();
+    };
+  }, []);
   // RevenueCat viene inizializzato solo nella Paywall (/pro) per evitare crash all'avvio.
   return (
     <BrowserRouter>
@@ -1476,6 +1517,9 @@ function App() {
           <Route path="/pro" element={<ProPage />} />
           <Route path="/admin" element={<AdminPage />} />
           <Route path="/c/:code" element={<CodeLandingPage />} />
+          <Route path="/scarica" element={<DownloadPage />} />
+          <Route path="/privacy" element={<PrivacyPage />} />
+          <Route path="/supporto" element={<SupportPage />} />
         </Routes>
         </AccessGate>
       </Shell>

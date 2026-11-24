@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { useAccess } from "@/components/AccessGate";
 import {
   isNative,
+  isIOS,
   configureRevenueCat,
   getOfferings,
   purchasePackage,
@@ -34,7 +35,7 @@ function StatusCard({ status }) {
     subscription: { icon: Crown, tone: "teal", title: "Abbonamento Premium attivo", sub: subscription?.expires_at ? `Rinnovo: ${fmtDate(subscription.expires_at)}` : "Grazie per il supporto" },
     convention: { icon: Building2, tone: "teal", title: `Premium tramite ${convention?.cooperative_name}`, sub: `Codice ${convention?.code} · valido fino al ${fmtDate(convention?.expires_at)}` },
     trial: { icon: Clock, tone: "amber", title: `Prova gratuita: ${trial_days_left} giorni rimasti`, sub: `Termina il ${fmtDate(trial_ends_at)}. Nessuna carta richiesta.` },
-    expired: { icon: Lock, tone: "red", title: "La prova gratuita è terminata", sub: "Per continuare ad usare l'app scegli un abbonamento o inserisci un codice convenzione." },
+    expired: { icon: Lock, tone: "red", title: isIOS() ? "Premium non attivo" : "La prova gratuita è terminata", sub: isIOS() ? "Per usare l'app scegli un abbonamento." : "Per continuare ad usare l'app scegli un abbonamento o inserisci un codice convenzione." },
   };
   const s = map[reason];
   if (!s) return null;
@@ -67,6 +68,11 @@ function PlanCard({ kind, pkg, busy, onBuy }) {
           <div className="text-sm text-stone-600 mt-0.5" data-testid={`plan-${kind}-price`}>
             {price} {yearly ? "/ anno" : "/ mese"}
           </div>
+          {pkg?.product?.introPrice?.price === 0 && (
+            <div className="text-xs text-teal-700 font-medium mt-0.5" data-testid={`plan-${kind}-intro`}>
+              Prova gratuita di {pkg.product.introPrice.periodNumberOfUnits} {{ DAY: "giorni", WEEK: "settimane", MONTH: "mesi", YEAR: "anni" }[pkg.product.introPrice.periodUnit] || "giorni"}, poi {price}
+            </div>
+          )}
         </div>
         <Button onClick={() => onBuy(pkg)} disabled={busy || !pkg} className="bg-teal-600 hover:bg-teal-700 shrink-0" data-testid={`buy-${kind}-btn`}>
           <Zap size={14} className="mr-1" /> Abbonati
@@ -177,7 +183,7 @@ export default function ProPage() {
           <Crown size={26} className="text-white" />
         </div>
         <h1 className="text-3xl font-serif text-stone-900">Caregiver Senior Premium</h1>
-        <p className="text-stone-600 text-sm">30 giorni di prova gratuita, poi scegli come continuare.</p>
+        <p className="text-stone-600 text-sm">{isIOS() ? "Scegli l'abbonamento per usare tutte le funzioni." : "30 giorni di prova gratuita, poi scegli come continuare."}</p>
       </div>
 
       <StatusCard status={status} />
@@ -213,7 +219,7 @@ export default function ProPage() {
             </p>
           </div>
 
-          <ConventionCard key={linkCode} initialCode={linkCode} onRedeemed={refresh} />
+          {!isIOS() && <ConventionCard key={linkCode} initialCode={linkCode} onRedeemed={refresh} />}
         </>
       )}
     </div>

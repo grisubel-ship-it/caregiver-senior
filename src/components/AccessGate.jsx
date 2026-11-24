@@ -17,8 +17,8 @@ import {
 const AccessContext = createContext({ status: null, refresh: () => {} });
 export const useAccess = () => useContext(AccessContext);
 
-const OPEN_PATHS = ["/pro", "/admin"];
-const isOpenPath = (p) => OPEN_PATHS.includes(p) || p.startsWith("/c/");
+const OPEN_PATHS = ["/pro", "/admin", "/privacy", "/supporto"];
+const isOpenPath = (p) => OPEN_PATHS.includes(p) || p.startsWith("/c/") || p === "/scarica";
 
 export function AccessProvider({ children }) {
   const [status, setStatus] = useState(null);
@@ -74,7 +74,7 @@ export function AccessGate({ children }) {
 export function TrialBanner() {
   const { status } = useAccess();
   const { pathname } = useLocation();
-  if (!status || status.reason !== "trial" || pathname === "/admin" || pathname.startsWith("/c/")) return null;
+  if (!status || status.reason !== "trial" || pathname === "/admin" || pathname === "/scarica" || pathname.startsWith("/c/")) return null;
   const days = status.trial_days_left;
   const urgent = days <= 3;
   return (

@@ -97,9 +97,12 @@ export async function fetchUsage() {
   return data;
 }
 
-// Stato di accesso (prova 30gg / convenzione / abbonamento)
+export const isIOS = () => isNative() && window.Capacitor.getPlatform?.() === "ios";
+
+// Stato di accesso (prova 30gg / convenzione / abbonamento). Su iPhone solo abbonamento Apple
 export async function fetchAccess() {
-  const { data } = await axios.get(`${API}/access/status`, { params: { app_user_id: getAppUserId() } });
+  const params = { app_user_id: getAppUserId(), ...(isIOS() ? { platform: "ios" } : {}) };
+  const { data } = await axios.get(`${API}/access/status`, { params });
   return data;
 }
 
@@ -176,3 +179,8 @@ export function parseCodeFromText(text) {
 
 export const PLAY_URL = "https://play.google.com/store/apps/details?id=com.caregiversync.app";
 export const playUrlWithCode = (code) => `${PLAY_URL}&referrer=${encodeURIComponent(`conv_code=${code}`)}`;
+
+// Da compilare quando l'app sarà pubblicata su App Store (es. https://apps.apple.com/it/app/caregiver-senior/id123)
+export const APP_STORE_URL = "";
+export const isIOSDevice = () => /iphone|ipad|ipod/i.test(navigator.userAgent);
+export const isAndroidDevice = () => /android/i.test(navigator.userAgent);

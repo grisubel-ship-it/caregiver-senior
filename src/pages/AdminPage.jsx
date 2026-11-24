@@ -194,6 +194,17 @@ export default function AdminPage() {
         <Button variant="ghost" size="sm" onClick={logout} data-testid="admin-logout-btn"><LogOut size={16} className="mr-1" /> Esci</Button>
       </div>
       <CreateForm onCreate={(body) => call(() => axios.post(`${API}/admin/conventions`, body, auth), "Codice creato")} />
+      <Card data-testid="admin-generic-flyer-card">
+        <CardContent className="pt-6 flex flex-wrap items-center justify-between gap-3">
+          <div className="min-w-0">
+            <div className="font-medium text-stone-900">Volantino generico</div>
+            <div className="text-sm text-stone-500">Senza codice, per farmacie, medici e bacheche. Il QR apre lo store giusto.</div>
+          </div>
+          <a href={`${API}/flyer/generico.pdf`} target="_blank" rel="noreferrer" data-testid="admin-generic-flyer-btn">
+            <Button variant="outline" size="sm"><FileText size={14} className="mr-1" /> Scarica PDF</Button>
+          </a>
+        </CardContent>
+      </Card>
       <Card>
         <CardHeader><CardTitle className="text-base">Codici esistenti ({codes.length})</CardTitle></CardHeader>
         <CardContent className="space-y-2" data-testid="admin-codes-list">

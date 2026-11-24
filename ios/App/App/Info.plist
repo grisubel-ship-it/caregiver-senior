@@ -47,6 +47,8 @@
 	<true/>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
+	<key>NSCameraUsageDescription</key>
+	<string>Caregiver Senior usa la fotocamera solo quando tocchi "Scansiona", per fotografare documenti dell'assistito (ricette, referti, piani terapeutici) e allegarli alla sua scheda. Le immagini non vengono usate per altri scopi.</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>

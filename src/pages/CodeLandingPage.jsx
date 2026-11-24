@@ -2,10 +2,11 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { toast } from "sonner";
-import { Building2, Copy, Download, Smartphone } from "lucide-react";
+import { Building2, Copy, Smartphone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { playUrlWithCode } from "@/lib/subscription";
+import { StoreButtons } from "@/pages/DownloadPage";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
@@ -87,13 +88,9 @@ export default function CodeLandingPage() {
             </Button>
           </a>
         )}
-        <a href={playUrlWithCode(code)} target="_blank" rel="noreferrer" className="block" data-testid="code-landing-play">
-          <Button variant={isAndroid ? "outline" : "default"} className={`w-full h-12 ${isAndroid ? "border-teal-600 text-teal-700" : "bg-teal-600 hover:bg-teal-700"}`}>
-            <Download size={18} className="mr-2" /> Scarica da Google Play
-          </Button>
-        </a>
+        <StoreButtons playHref={playUrlWithCode(code)} />
         <p className="text-xs text-stone-500 text-center">
-          Installando da questo link il codice si attiva da solo al primo avvio. In alternativa apri l'app, tocca Premium e
+          Su Android, installando da questo link il codice si attiva da solo al primo avvio. In alternativa apri l'app, tocca Premium e
           inserisci il codice.
         </p>
       </div>

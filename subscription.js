@@ -97,9 +97,12 @@ export async function fetchUsage() {
   return data;
 }
 
-// Stato di accesso (prova 30gg / convenzione / abbonamento)
+export const isIOS = () => isNative() && window.Capacitor.getPlatform?.() === "ios";
+
+// Stato di accesso (prova 30gg / convenzione / abbonamento). Su iPhone solo abbonamento Apple
 export async function fetchAccess() {
-  const { data } = await axios.get(`${API}/access/status`, { params: { app_user_id: getAppUserId() } });
+  const params = { app_user_id: getAppUserId(), ...(isIOS() ? { platform: "ios" } : {}) };
+  const { data } = await axios.get(`${API}/access/status`, { params });
   return data;
 }
 
